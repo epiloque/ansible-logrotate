@@ -1,0 +1,4 @@
+---
+
+- include: logrotate.yml
+  when: ansible_os_family == "RedHat"
