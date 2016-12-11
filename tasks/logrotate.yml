@@ -19,7 +19,7 @@
     line: "rotate 7"
     backrefs: yes
 
-- name: set logrotate retention period to 7 days
+- name: ensure logrotate.d directory exists
   file:
     path: /etc/logrotate.d
     state: directory
