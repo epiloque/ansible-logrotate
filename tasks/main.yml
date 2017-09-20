@@ -1,4 +1,4 @@
 ---
 
-- include: logrotate.yml
+- include_tasks: logrotate.yml
   when: ansible_os_family == "RedHat"
