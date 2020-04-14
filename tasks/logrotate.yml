@@ -19,8 +19,40 @@
     line: "rotate 7"
     backrefs: yes
 
+- name: enable logrotate compression
+  lineinfile:
+    dest: /etc/logrotate.conf
+    regexp: '^#compress'
+    line: "compress"
+    backrefs: yes
+
 - name: ensure logrotate.d directory exists
   file:
     path: /etc/logrotate.d
     state: directory
     mode: 0755
+
+- name: ensure group "logread" exists
+  group:
+    name: logread
+    system: yes
+    state: present
+
+- name: syslog rotation
+  template:
+    src: syslog.j2
+    dest: /etc/logrotate.d/syslog
+    owner: root
+    group: root
+    mode: 0644
+
+- name: grant logread group access
+  acl:
+    path: "{{ item }}"
+    entity: logread
+    etype: group
+    permissions: r
+    state: present
+  loop:
+     - /var/log/messages
+     - /var/log/cron
