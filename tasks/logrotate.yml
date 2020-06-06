@@ -67,3 +67,5 @@
   with_items:
   - { path: '/var/log/messages', enabled: "{{ logrotate_var_log_messages.stat.exists }}" }
   - { name: '/var/log/cron', enabled: "{{ logrotate_var_log_cron.stat.exists }}" }
+  tags:
+  - molecule-idempotence-notest
