@@ -46,13 +46,24 @@
     group: root
     mode: 0644
 
+- name: stat /var/log/messages
+  stat:
+    path: /var/log/messages
+  register: logrotate_var_log_messages
+
+- name: stat /var/log/cron
+  stat:
+    path: /var/log/cron
+  register: logrotate_var_log_cron
+
 - name: grant logread group access
   acl:
-    path: "{{ item }}"
+    path: "{{ item.path }}"
     entity: logread
     etype: group
     permissions: r
     state: present
-  loop:
-     - /var/log/messages
-     - /var/log/cron
+  when: item.enabled
+  with_items:
+  - { path: '/var/log/messages', enabled: "{{ logrotate_var_log_messages.stat.exists }}" }
+  - { name: '/var/log/cron', enabled: "{{ logrotate_var_log_cron.stat.exists }}" }
